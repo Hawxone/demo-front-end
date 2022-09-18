@@ -1,10 +1,13 @@
 import Link from "next/link";
 import { Menu, Transition } from '@headlessui/react'
-import { Fragment} from 'react'
+import {Fragment} from 'react'
 import { ChevronDownIcon } from '@heroicons/react/20/solid'
+import {useRouter} from "next/router";
 
 const Header = () => {
 
+    const router = useRouter();
+    const currentRoute = router.pathname;
 
     return (
         <nav className="px-2 bg-white border-gray-200 bg-gray-900 border-gray-700">
@@ -30,14 +33,14 @@ const Header = () => {
 
                         {/*Nav list*/}
                         <li>
-                            <div className={"block py-2 pr-4 pl-3 text-white bg-blue-700 rounded md:bg-transparent md:text-blue-700 md:p-0 md:text-gray-400 bg-blue-600 md:bg-transparent hover:text-white"}>
+                            <div className={currentRoute === "/" ? "text-white" : "" +"block py-2 pr-4 pl-3 text-white bg-blue-700 rounded md:bg-transparent md:text-blue-700 md:p-0 md:text-gray-400 bg-blue-600 md:bg-transparent hover:text-white"}>
                                 <Link href="/"
                                       aria-current="page">Home</Link>
                             </div>
 
                         </li>
                         <li>
-                            <div className={"block py-2 pr-4 pl-3 text-gray-400 rounded md:bg-transparent md:text-blue-700 md:p-0 md:text-gray-400 md:bg-transparent cursor-pointer hover:text-white md:hover:bg-transparent hover:bg-gray-700 md:hover:bg-transparent font-medium"}>
+                            <div className={currentRoute === "/about" ? "text-white" : "" +"block py-2 pr-4 pl-3 text-gray-400 rounded md:bg-transparent md:text-blue-700 md:p-0 md:text-gray-400 md:bg-transparent cursor-pointer hover:text-white md:hover:bg-transparent hover:bg-gray-700 md:hover:bg-transparent font-medium"}>
                                 <Link href="/about"
                                       aria-current="page">Contact</Link>
                             </div>

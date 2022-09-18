@@ -8,15 +8,45 @@ import {console} from "next/dist/compiled/@edge-runtime/primitives/console";
 import Toast from "./Toast";
 import {toast} from "react-hot-toast";
 import ImportProduct from "./ImportProduct";
+import ReactPaginate from "react-paginate";
+
+function Items ({currentItems,editProduct,removeProduct}){
+
+    return(
+        <tbody>
+        {currentItems && currentItems.map((product)=>(
+            <tr className="bg-white border-b" key={product.id}>
+                <th scope="row"
+                    className="py-4 px-6 font-medium text-gray-900 whitespace-nowrap">
+                    {product.name}
+                </th>
+                <td className="py-4 px-6">
+                    {product.category}
+                </td>
+                <td className="py-4 px-6">
+                    {product.price}
+                </td>
+                <td className="py-4 px-6">
+                    <a href="#"  onClick={(e) => editProduct(e, product.id)}
+                       className="font-medium text-blue-600 px-1 hover:underline">Edit</a>
+                    <a href="#"  onClick={(e) => removeProduct(e, product.id)}
+                       className="font-medium text-blue-600 px-1 hover:underline">Delete</a>
+                </td>
+            </tr>
+        ))}
+
+
+        </tbody>
+    )
+}
 
 
 
-const Products = () => {
-
-
+const Products = ({itemsPerPage}) => {
 
     //blok toggle modal
     const [openModal, setOpenModal] = useState(false);
+    const [product, setProduct] = useState(null);
 
     const toggleCloseModal = () => {
         setOpenModal(false)
@@ -35,13 +65,12 @@ const Products = () => {
     const initFetch = useCallback(() => {
         dispatch(getProducts());
         dispatch(getCategories());
+        setProduct(products)
     }, [dispatch])
-
     useEffect(() => {
         initFetch()
+
     }, [initFetch])
-
-
 
 
     const removeProduct = (e,id) =>{
@@ -63,6 +92,27 @@ const Products = () => {
         setProductId(id);
         setOpenModal(true)
     };
+
+    const [currentItems, setCurrentItems] = useState(null);
+    const [pageCount, setPageCount] = useState(0);
+    const [itemOffset, setItemOffset] = useState(0);
+
+
+    useEffect(() => {
+        const endOffset = itemOffset + itemsPerPage;
+        console.log(`Loading items from ${itemOffset} to ${endOffset}`);
+        setCurrentItems(products.slice(itemOffset,endOffset))
+        setPageCount(Math.ceil(products.length/itemsPerPage))
+    }, [itemOffset,itemsPerPage,products]);
+
+    const handlePageClick = (event) => {
+        const newOffset = (event.selected * itemsPerPage) % products.length;
+        console.log(
+            `User requested page number ${event.selected}, which is offset ${newOffset}`
+        );
+        setItemOffset(newOffset);
+    };
+
 
     return (
            <div className={"bg-gray-200 flex-grow h-screen w-full pt-6 mr-6 overflow-y-auto mt-6 "}>
@@ -89,32 +139,28 @@ const Products = () => {
                                </th>
                            </tr>
                            </thead>
-                           <tbody>
-                           {products.map((product)=>(
-                               <tr className="bg-white border-b" key={product.id}>
-                                   <th scope="row"
-                                       className="py-4 px-6 font-medium text-gray-900 whitespace-nowrap">
-                                       {product.name}
-                                   </th>
-                                   <td className="py-4 px-6">
-                                       {product.category}
-                                   </td>
-                                   <td className="py-4 px-6">
-                                       {product.price}
-                                   </td>
-                                   <td className="py-4 px-6">
-                                       <a href="#"  onClick={(e) => editProduct(e, product.id)}
-                                          className="font-medium text-blue-600 px-1 hover:underline">Edit</a>
-                                       <a href="#"  onClick={(e) => removeProduct(e, product.id)}
-                                          className="font-medium text-blue-600 px-1 hover:underline">Delete</a>
-                                   </td>
-                               </tr>
-                           ))}
-
-
-                           </tbody>
+                            <Items currentItems={currentItems} editProduct={editProduct} removeProduct={removeProduct} />
                        </table>
+
+
                    </div>
+
+               <nav className={"ml-5 mt-3 isolate overflow-x-auto w-fit shadow-md rounded-lg"}>
+                   <ReactPaginate
+                       containerClassName={"isolate inline-flex -space-x-px rounded-md shadow-sm"}
+                       pageLinkClassName={"relative inline-flex items-center border border-gray-300 bg-white px-4 py-2 text-sm font-medium text-gray-500 hover:bg-gray-50 focus:z-20"}
+                       previousLinkClassName={"relative inline-flex items-center rounded-l-md border border-gray-300 bg-white px-2 py-2 text-sm font-medium text-gray-500 hover:bg-gray-50 focus:z-20"}
+                       nextLinkClassName={"relative inline-flex items-center rounded-r-md border border-gray-300 bg-white px-2 py-2 text-sm font-medium text-gray-500 hover:bg-gray-50 focus:z-20"}
+                       activeLinkClassName={"relative z-10 inline-flex items-center border border-gray-900 bg-gray-900 text-sm font-medium text-white focus:z-20"}
+                       breakLabel="..."
+                       nextLabel="next >"
+                       onPageChange={handlePageClick}
+                       pageRangeDisplayed={5}
+                       pageCount={pageCount}
+                       previousLabel="< previous"
+                       renderOnZeroPageCount={null}
+                   />
+               </nav>
                <EditProduct openModal={openModal} toggleCloseModal = {toggleCloseModal} productId={productId} />
            </div>
 

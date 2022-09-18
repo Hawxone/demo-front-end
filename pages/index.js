@@ -5,6 +5,8 @@ import Header from "../components/Header";
 import Products from "../components/Products";
 
 export default function Home() {
+
+
   return (
     <div>
       <Head>
@@ -14,7 +16,7 @@ export default function Home() {
       </Head>
         <Header />
       <main className={"flex bg-gray-200"}>
-          <Products />
+          <Products itemsPerPage={2} />
       </main>
 
       <footer >
