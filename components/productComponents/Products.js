@@ -1,11 +1,11 @@
 import React, {useCallback, useEffect, useState} from 'react';
 import {useDispatch, useSelector} from "react-redux";
-import {deleteProduct, getProducts} from "../public/src/features/productSlice";
-import {getCategories} from "../public/src/features/categorySlice";
+import {deleteProduct, getProducts} from "../../public/src/features/productSlice";
+import {getCategories} from "../../public/src/features/categorySlice";
 import AddProduct from "./AddProduct";
 import EditProduct from "./EditProduct";
 import {console} from "next/dist/compiled/@edge-runtime/primitives/console";
-import Toast from "./Toast";
+import Toast from "../Toast";
 import {toast} from "react-hot-toast";
 import ImportProduct from "./ImportProduct";
 import ReactPaginate from "react-paginate";
@@ -27,9 +27,9 @@ function Items ({currentItems,editProduct,removeProduct}){
                     {product.price}
                 </td>
                 <td className="py-4 px-6">
-                    <a href="#"  onClick={(e) => editProduct(e, product.id)}
+                    <a href="components/productComponents/Products#" onClick={(e) => editProduct(e, product.id)}
                        className="font-medium text-blue-600 px-1 hover:underline">Edit</a>
-                    <a href="#"  onClick={(e) => removeProduct(e, product.id)}
+                    <a href="components/productComponents/Products#" onClick={(e) => removeProduct(e, product.id)}
                        className="font-medium text-blue-600 px-1 hover:underline">Delete</a>
                 </td>
             </tr>
@@ -43,6 +43,8 @@ function Items ({currentItems,editProduct,removeProduct}){
 
 
 const Products = ({itemsPerPage}) => {
+    //blok goblok
+    const products = useSelector(state=> state.products)
 
     //blok toggle modal
     const [openModal, setOpenModal] = useState(false);
@@ -55,8 +57,7 @@ const Products = ({itemsPerPage}) => {
     //usestate
     const [productId, setProductId] = useState("");
 
-    //blok goblok
-    const products = useSelector(state=> state.products)
+
 
     const dispatch = useDispatch();
 
@@ -66,7 +67,9 @@ const Products = ({itemsPerPage}) => {
         dispatch(getProducts());
         dispatch(getCategories());
         setProduct(products)
+        console.log(products)
     }, [dispatch])
+
     useEffect(() => {
         initFetch()
 

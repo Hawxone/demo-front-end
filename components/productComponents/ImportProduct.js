@@ -1,7 +1,7 @@
 import React, {Fragment, useState} from 'react';
 import {Dialog, Transition} from "@headlessui/react";
 import {useDispatch} from "react-redux";
-import {uploadProduct} from "../public/src/features/productSlice";
+import {uploadProduct} from "../../public/src/features/productSlice";
 import {toast} from "react-hot-toast";
 
 const ImportProduct = () => {

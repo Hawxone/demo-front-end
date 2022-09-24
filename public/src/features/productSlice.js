@@ -17,7 +17,6 @@ export const saveProduct = createAsyncThunk(
     "product/post",
      async ({name,categoryId,category,price,timestamp})=>{
         const res = await ProductService.saveProduct({name,categoryId,category,price,timestamp});
-        console.log(res)
         return res.data;
      }
 )
@@ -61,6 +60,7 @@ const productSlice = createSlice({
         },
         [updateProduct.fulfilled]:(state,action)=>{
            const index = state.findIndex(product => product.id === action.payload.id);
+           console.log(index)
            state[index] = {
                ...state[index],
                ...action.payload

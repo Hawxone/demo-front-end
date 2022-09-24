@@ -1,8 +1,8 @@
 import React, {Fragment, useState} from 'react';
 import {Dialog, Transition} from "@headlessui/react";
-import {saveProduct} from "../public/src/features/productSlice";
+import {saveProduct} from "../../public/src/features/productSlice";
 import {useDispatch, useSelector} from "react-redux";
-import Toast from "./Toast";
+import Toast from "../Toast";
 import {toast} from "react-hot-toast";
 
 const AddProduct = () => {
@@ -32,7 +32,6 @@ const AddProduct = () => {
     //state
     const [productState, setProduct] = useState(initialProductState);
     const [submitted, setSubmitted] = useState(false);
-    const [currentProduct, setCurrentProduct] = useState(initialProductState);
     const [message, setMessage] = useState("");
 
 

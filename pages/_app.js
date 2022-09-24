@@ -1,4 +1,5 @@
 import '../styles/globals.css'
+import  "../styles/custom.css"
 import {Provider} from "react-redux";
 import store from "../public/src/app/store";
 

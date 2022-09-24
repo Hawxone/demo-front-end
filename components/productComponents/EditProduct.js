@@ -1,9 +1,9 @@
 import React, {Fragment, useCallback, useEffect, useState} from 'react';
 import {Dialog, Transition} from "@headlessui/react";
 import {useDispatch, useSelector} from "react-redux";
-import {getProducts, updateProduct} from "../public/src/features/productSlice";
-import {getCategories} from "../public/src/features/categorySlice";
-import ProductService from "../services/ProductService";
+import {getProducts, updateProduct} from "../../public/src/features/productSlice";
+import {getCategories} from "../../public/src/features/categorySlice";
+import ProductService from "../../services/ProductService";
 
 const EditProduct = ({openModal,toggleCloseModal,productId}) => {
 

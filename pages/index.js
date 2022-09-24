@@ -2,7 +2,7 @@ import Head from 'next/head'
 
 import Header from "../components/Header";
 
-import Products from "../components/Products";
+import Products from "../components/productComponents/Products";
 
 export default function Home() {
 
@@ -16,7 +16,7 @@ export default function Home() {
       </Head>
         <Header />
       <main className={"flex bg-gray-200"}>
-          <Products itemsPerPage={2} />
+         tes
       </main>
 
       <footer >

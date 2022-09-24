@@ -8,9 +8,31 @@ const Header = () => {
 
     const router = useRouter();
     const currentRoute = router.pathname;
+    const navItems = [
+        {
+            name:"Home",
+            href:"/"
+        },
+        {
+            name:"Products",
+            href:"/products"
+        },
+        {
+            name:"Blog",
+            href:"/blog"
+        },
+        {
+            name:"About",
+            href:"/about"
+        },
+        {
+            name:"Gallery",
+            href:"/image"
+        }
+    ]
 
     return (
-        <nav className="px-2 bg-white border-gray-200 bg-gray-900 border-gray-700">
+        <nav className="px-2 bg-white border-gray-200 bg-gray-900 border-gray-700 sticky top-0 z-50">
             <div className="container flex flex-wrap justify-between items-center mx-auto">
                 <a href="#" className="flex items-center">
                     <img src="https://flowbite.com/docs/images/logo.svg" className="mr-3 h-6 sm:h-10"
@@ -32,19 +54,18 @@ const Header = () => {
                     <ul className="flex flex-col p-4 mt-4 bg-gray-50 rounded-lg border border-gray-100 md:flex-row md:space-x-8 md:mt-0 md:text-sm md:font-medium md:border-0 md:bg-white bg-gray-800 md:bg-gray-900 border-gray-700">
 
                         {/*Nav list*/}
-                        <li>
-                            <div className={currentRoute === "/" ? "text-white" : "" +"block py-2 pr-4 pl-3 text-white bg-blue-700 rounded md:bg-transparent md:text-blue-700 md:p-0 md:text-gray-400 bg-blue-600 md:bg-transparent hover:text-white"}>
-                                <Link href="/"
-                                      aria-current="page">Home</Link>
-                            </div>
+                        {navItems && navItems.map(item=>(
+                            <li key={item.name}>
+                                <div className={currentRoute === item.href? "text-white" : "" +"block py-2 pr-4 pl-3 text-white bg-blue-700 rounded md:bg-transparent md:text-blue-700 md:p-0 md:text-gray-400 bg-blue-600 md:bg-transparent hover:text-white"}>
+                                    <Link href={item.href}
+                                          aria-current="page">{item.name}</Link>
+                                </div>
 
-                        </li>
-                        <li>
-                            <div className={currentRoute === "/about" ? "text-white" : "" +"block py-2 pr-4 pl-3 text-gray-400 rounded md:bg-transparent md:text-blue-700 md:p-0 md:text-gray-400 md:bg-transparent cursor-pointer hover:text-white md:hover:bg-transparent hover:bg-gray-700 md:hover:bg-transparent font-medium"}>
-                                <Link href="/about"
-                                      aria-current="page">Contact</Link>
-                            </div>
-                        </li>
+                            </li>
+                        ))}
+
+
+
 
                         <li>
                             <Menu as="div" className="relative inline-block text-left">
