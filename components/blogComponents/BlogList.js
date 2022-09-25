@@ -32,7 +32,7 @@ function Items ({currentItems}){
                     {blog.title}
                 </th>
                 <td className="py-4 px-6 flex">
-                    { blog.tags.map((tag,index)=>(
+                    { blog.tags.map((tag)=>(
                         <div key={tag.id} className={"flex py-1 px-2 mx-0.5 bg-blue-600 text-white rounded"}>
                            {tag.label}
                         </div>

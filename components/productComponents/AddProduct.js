@@ -32,7 +32,6 @@ const AddProduct = () => {
     //state
     const [productState, setProduct] = useState(initialProductState);
     const [submitted, setSubmitted] = useState(false);
-    const [message, setMessage] = useState("");
 
 
 

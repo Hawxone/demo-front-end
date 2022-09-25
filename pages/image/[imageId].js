@@ -5,86 +5,105 @@ import {useRouter} from "next/router";
 import ImageDetail from "../../components/imageComponents/ImageDetail";
 import Link from "next/link";
 import ImageService from "../../services/ImageService";
-import image from "./index";
-import ImageIndex from "./index";
 import {console} from "next/dist/compiled/@edge-runtime/primitives/console";
-import {current} from "@reduxjs/toolkit";
-
+import image from "./index";
 
 
 const ImageDetailPage = () => {
     const router = useRouter();
-    const ImageId = router.query.imageId;
-
+    const {imageId} = router.query
     const [order, setOrder] = useState(0);
-    const initialImageState = {
-        id:null,
-        title:"",
-        image:undefined,
-        imageOrder:null
-    }
-
-    const [currentImage, setCurrentImage] = useState(initialImageState);
-    const [nextImage, setNextImage] = useState(initialImageState);
     const [arrayState, setArrayState] = useState([]);
     const [size, setSize] = useState(0);
+    const [start, setStart] = useState(0);
+    const [offSet, setOffSet] = useState(0);
 
 
     useEffect(() => {
 
-        if (ImageId==nextImage.imageOrder){
-            setOrder(+ImageId)
-            ImageService.get(+ImageId+1).then(
-                res=>{
-                    setCurrentImage(res.data)
-                        //ternyata bisa masukin ke array bang
-                    setArrayState(current=>[...current,res.data])
-                    console.log(arrayState.length)
-                }
-            ).catch(e=>{
+        if(router.isReady){
+            setOrder(imageId)
+
+
+            ImageService.getSize().then(res => {
+                setSize(res.data)
+            }).catch(e=>{
                 console.log(e)
-            })
-        }else if (nextImage.imageOrder==null && currentImage.imageOrder != null) {
-            setOrder(ImageId)
-            ImageService.get(+ImageId).then(
-                res=>{
-                    setNextImage(res.data)
-                    setCurrentImage(initialImageState)
-                }
-            ).catch(e=>{
-                console.log(e)
-            })
-            setNextImage(initialImageState)
-        } else {
-            setOrder(ImageId)
-            ImageService.get(+ImageId).then(
-                res=>{
-                    setCurrentImage(res.data)
-                    setArrayState([...arrays,res.data])
-                }
-            ).catch(e=>{
-                console.log(e)
-            })
-            ImageService.get(+ImageId+1).then(
-                res=>{
-                    setNextImage(res.data)
-                }
-            ).catch(e=>{
-                console.log(e)
-            })
+            });
 
         }
+        if(order==0){
+            for (let i = +imageId; i <= +imageId+2; i++) {
+                ImageService.get(i).then(
+                    res=>{
+                        setArrayState(current=>[...current,res.data])
+                    }
+                ).catch(e=>{
+                    console.log(e)
+                })
+
+            }
+            setStart(imageId)
+            setOffSet(+imageId+3)
+        }
+       /* else if(+imageId+1==+offSet){
+            console.log("triggered")
+            for (let i = +imageId+2; i <= offSet+3; i++) {
+                ImageService.get(i).then(
+                    res=>{
+                        setArrayState(current=>[...current,res.data])
+                    }
+                ).catch(e=>{
+                    console.log(e)
+                })
+
+            }
+            setStart(start+2)
+            setOffSet(offSet+2)
+        }*/
 
 
-        ImageService.getSize().then(res => {
-            setSize(res.data)
-        }).catch(e=>{
-            console.log(e)
-        });
-    }, [ImageId]);
+    }, [imageId, router.isReady]);
 
+    //pusing mikirin beginian doang anying
+    const previous = () =>{
+        let found = false;
+        for (let i = 0; i < arrayState.length; i++) {
+            if(arrayState[i].imageOrder==(+imageId-1)){
+                found = true;
+                break;
+            }
+        }
+        if(found){
 
+        }else{
+            ImageService.get(+imageId-1).then(
+                res=>{
+                    setArrayState(current=>[...current,res.data])
+                }
+            ).catch(e=>{
+                console.log(e)
+            })
+        }
 
+        router.push("/image/"+(+imageId-1))
+    }
+
+    const next = ()=>{
+
+            for (let i = offSet; i <= offSet+1; i++) {
+                ImageService.get(i).then(
+                    res=>{
+                        setArrayState(current=>[...current,res.data])
+                    }
+                ).catch(e=>{
+                    console.log(e)
+                })
+            }
+            setOffSet(offSet+2)
+
+        router.push("/image/"+(+imageId+1))
+    }
 
 
     return (
@@ -103,18 +122,17 @@ const ImageDetailPage = () => {
                         </div>
                         <div className={"grid justify-items-center"}>
 
-                                <ImageDetail imageId={ImageId} nextImage={nextImage} currentImage={currentImage} />
+                                <ImageDetail props = {arrayState} imageId={imageId} />
 
                             <div className={"bg-gray-500 py-2 px-5 w-full grid justify-items-center text-white font-medium"}>
 
 
-
                                 <div className={"flex"}>
-                                    <Link href={`/image/`+(+order-1)} >Previous</Link>
+                                    <button onClick={previous} >Previous</button>
                                     <div className={"px-2"}>
                                         Page {order} of {size}
                                     </div>
-                                    <Link href={`/image/`+(+order+1)} >Next</Link>
+                                    <button onClick={next}>Next</button>
                                 </div>
 
                             </div>
