@@ -3,8 +3,14 @@ import { Menu, Transition } from '@headlessui/react'
 import {Fragment} from 'react'
 import { ChevronDownIcon } from '@heroicons/react/20/solid'
 import {useRouter} from "next/router";
+import {useDispatch, useSelector} from "react-redux";
+
+import {logout} from "../public/src/features/UserSlice"
 
 const Header = () => {
+
+    const { userInfo } = useSelector((state) => state.users)
+    const dispatch = useDispatch();
 
     const router = useRouter();
     const currentRoute = router.pathname;
@@ -22,13 +28,21 @@ const Header = () => {
             href:"/blog"
         },
         {
+            name:"Blog Server side paginated",
+            href:"/blog/server-paginated/1"
+        },
+        {
             name:"About",
             href:"/about"
         },
         {
             name:"Gallery",
             href:"/image"
-        }
+        },
+        {
+            name:"External Gallery",
+            href:"/external"
+        },
     ]
 
     return (
@@ -117,16 +131,21 @@ const Header = () => {
                                         </div>
                                         <div className="px-1 py-1">
                                             <Menu.Item>
-                                                {({ active }) => (
-                                                    <button
-                                                        className={`${
-                                                            active ? 'bg-gray-500 text-white' : 'text-gray-900'
-                                                        } group flex w-full items-center rounded-md px-2 py-2 text-sm`}
-                                                    >
 
-                                                        Logout
-                                                    </button>
-                                                )}
+                                                {
+                                                    userInfo?(
+                                                        <button onClick={() => dispatch(logout())}  className={`group flex w-full items-center rounded-md px-2 py-2 text-sm`}>
+                                                            logout
+                                                        </button>
+                                                    ): <Link href={"/auth/login"}>
+                                                        <button  className={`group flex w-full items-center rounded-md px-2 py-2 text-sm`}>
+                                                            login
+                                                        </button>
+                                                    </Link>
+                                                }
+
+
+
                                             </Menu.Item>
                                         </div>
                                     </Menu.Items>

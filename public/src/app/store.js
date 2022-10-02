@@ -4,13 +4,15 @@ import categoriesReducer from "../features/categorySlice";
 import blogsReducer from "../features/blogSlice";
 import tagsReducer from "../features/TagSlice";
 import imagesReducer from "../features/ImageSlice";
+import usersReducer from "../features/UserSlice";
 
 const reducer = {
     products:productsReducer,
     categories:categoriesReducer,
     blogs:blogsReducer,
     tags:tagsReducer,
-    images:imagesReducer
+    images:imagesReducer,
+    users:usersReducer,
 }
 
 const store =  configureStore({

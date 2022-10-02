@@ -4,6 +4,12 @@ const getAll = ()=>{
     return http.get(`/blog`)
 }
 
+
+const getAllPaginated = (params)=>{
+
+    return http.get(`/blog/paginated`,{params})
+}
+
 const get = id =>{
     console.log(id)
     return http.get(`/blog/${id}`)
@@ -28,7 +34,7 @@ const remove = (id)=>{
 }
 
 const BlogService = {
-    getAll,saveBlog,get,update,remove
+    getAll,saveBlog,get,update,remove,getAllPaginated
 }
 
 export default BlogService;

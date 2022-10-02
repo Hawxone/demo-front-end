@@ -43,6 +43,7 @@ const ImageDetailPage = () => {
                 })
 
             }
+
             setStart(imageId)
             setOffSet(+imageId+3)
         }
@@ -91,6 +92,9 @@ const ImageDetailPage = () => {
 
     const next = ()=>{
 
+        if (offSet > size){
+
+        }else {
             for (let i = offSet; i <= offSet+1; i++) {
                 ImageService.get(i).then(
                     res=>{
@@ -101,8 +105,15 @@ const ImageDetailPage = () => {
                 })
             }
             setOffSet(offSet+2)
+        }
 
-        router.push("/image/"+(+imageId+1))
+        if(+imageId == size){
+            router.push("/image/")
+            setArrayState([])
+        }else {
+            router.push("/image/"+(+imageId+1))
+        }
+
     }
 
 

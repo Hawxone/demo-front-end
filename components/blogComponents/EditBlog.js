@@ -14,8 +14,7 @@ const EditBlog = (id) => {
         title:"",
         subtitle:"",
         content:"",
-        image:undefined,
-        file:undefined,
+        imageUrl:"",
         tags:[],
         posted:""
     }
@@ -102,7 +101,7 @@ const EditBlog = (id) => {
         formData.append("title",currentBlog.title)
         formData.append("subtitle",currentBlog.subtitle)
         formData.append("content",currentBlog.content)
-        formData.append("file",currentBlog.file)
+        formData.append("imageUrl",currentBlog.imageUrl)
         formData.append("tags",JSON.stringify(currentBlog.tags))
         formData.append("posted",currentBlog.posted)
         console.log(currentBlog)
@@ -175,7 +174,7 @@ const EditBlog = (id) => {
                                             <div className="mb-6">
                                                 <label htmlFor="default-input"
                                                        className="block mb-2 text-sm font-medium text-gray-900">Header Image</label>
-                                                <input id="file" type={"file"} disabled={true}
+                                                <input id="imageUrl" type={"text"} disabled={true} value={currentBlog.imageUrl||""}
                                                        className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5" />
                                             </div>
                                             {currentBlog.image && (

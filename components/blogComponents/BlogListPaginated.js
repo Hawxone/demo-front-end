@@ -1,15 +1,21 @@
 import React, {useCallback, useEffect, useState} from 'react';
-import ReactPaginate from "react-paginate";
 import AddBlog from "./AddBlog";
 import {useDispatch, useSelector} from "react-redux";
-import {deleteBlog, getBlogs} from "../../public/src/features/blogSlice";
+import {
+    deleteBlog, getPaginatedBlogs,
+} from "../../public/src/features/blogSlice";
 import EditBlog from "./EditBlog";
 import {console} from "next/dist/compiled/@edge-runtime/primitives/console";
+import {useRouter} from "next/router";
+import blogService from "../../services/BlogService";
+import {Pagination} from "@mui/material";
+import Image from "next/image";
 
 
 
 function Items ({currentItems}){
     const dispatch = useDispatch();
+
 
     const removeBlog = (e,id)=>{
         e.preventDefault()
@@ -46,6 +52,9 @@ function Items ({currentItems}){
                     {blog.posted}
                 </td>
                 <td className="py-4 px-6">
+                    <img loading={"lazy"} src={blog.imageUrl} width={100} height={100}/>
+                </td>
+                <td className="py-4 px-6">
                     <EditBlog id={blog.id} />
                     <a href="components/productComponents/Products#" onClick={(e) => removeBlog(e, blog.id)}
                        className="font-medium text-blue-600 px-1 hover:underline">Delete</a>
@@ -58,35 +67,74 @@ function Items ({currentItems}){
     )
 }
 
-const BlogList = ({itemsPerPage}) => {
-    const blogs = useSelector(state => state.blogs)
+const BlogListPaginated = () => {
+    const router = useRouter()
+    const {pid} = router.query
+    const [blog, setBlog] = useState([]);
+    const [page, setPage] = useState(1);
+    const [count, setCount] = useState(0);
+    const [pageSize, setPageSize] = useState(3);
+
+
     const dispatch = useDispatch();
+    const bloge = useSelector(state => state.blogs)
+    console.log(bloge)
 
+    const getRequestParams = (page, pageSize) => {
+        let params = {};
 
-    const [currentItems, setCurrentItems] = useState(null);
-    const [pageCount, setPageCount] = useState(0);
-    const [itemOffset, setItemOffset] = useState(0);
-    const [blog, setBlog] = useState(null);
+        if (page) {
+            params["page"] = page-1;
 
+        }
 
+        if (pageSize) {
+            params["size"] = pageSize;
+        }
 
-    useEffect(() => {
-        dispatch(getBlogs());
-        console.log(blogs)
-    }, [dispatch])
-
-
-
-    useEffect(() => {
-        const endOffset = itemOffset + itemsPerPage;
-        setCurrentItems(blogs.blogs.slice(itemOffset,endOffset))
-        setPageCount(Math.ceil(blogs.blogs.length/itemsPerPage))
-    }, [itemOffset,itemsPerPage,blogs]);
-
-    const handlePageClick = (event) => {
-        const newOffset = (event.selected * itemsPerPage) % blogs.length;
-        setItemOffset(newOffset);
+        return params;
     };
+
+
+
+    const retrieveBlogs = ()=>{
+        const params = getRequestParams(page,pageSize);
+            dispatch(getPaginatedBlogs({params})).unwrap().then(()=>{
+                setBlog(bloge.blogs)
+                setCount(bloge.totalPages)
+            })
+
+
+      /*          blogService.getAllPaginated(params)
+                    .then((response)=>{
+                        const {blogs,totalPages} = response.data;
+
+                        setBlog(blogs);
+                        setCount(totalPages)
+
+                    }).catch((e)=>{
+                    console.log(e)
+                })*/
+    }
+
+    useEffect(retrieveBlogs,[dispatch,page,pageSize])
+
+
+    useEffect(() => {
+     if(router.isReady){
+         setPage(+pid)
+
+     }
+
+    }, [router.isReady]);
+
+
+    const handlePageChange = (event, value) => {
+        router.push("/blog/server-paginated/"+value,undefined,{shallow:true})
+        setPage(value);
+    };
+
+
 
 
     return (
@@ -111,32 +159,34 @@ const BlogList = ({itemsPerPage}) => {
                             Posted Date
                         </th>
                         <th scope="col" className="py-3 px-6">
+                            Image
+                        </th>
+                        <th scope="col" className="py-3 px-6">
                             Action
                         </th>
                     </tr>
                     </thead>
-                    <Items currentItems={currentItems} />
+
+                    <Items  currentItems={bloge.blogs} />
                 </table>
+
+                <Pagination
+                    className="my-3"
+                    count={bloge.totalPages}
+                    page={page}
+                    siblingCount={1}
+                    boundaryCount={1}
+                    variant="outlined"
+                    shape="rounded"
+                    onChange={handlePageChange}
+                />
+
             </div>
 
-            <nav className={"ml-5 mt-3 isolate overflow-x-auto w-fit shadow-md rounded-lg"}>
-                <ReactPaginate
-                    containerClassName={"isolate inline-flex -space-x-px rounded-md shadow-sm"}
-                    pageLinkClassName={"relative inline-flex items-center border border-gray-300 bg-white px-4 py-2 text-sm font-medium text-gray-500 hover:bg-gray-50 focus:z-20"}
-                    previousLinkClassName={"relative inline-flex items-center rounded-l-md border border-gray-300 bg-white px-2 py-2 text-sm font-medium text-gray-500 hover:bg-gray-50 focus:z-20"}
-                    nextLinkClassName={"relative inline-flex items-center rounded-r-md border border-gray-300 bg-white px-2 py-2 text-sm font-medium text-gray-500 hover:bg-gray-50 focus:z-20"}
-                    activeLinkClassName={"relative z-10 inline-flex items-center border border-gray-900 bg-gray-900 text-sm font-medium text-white focus:z-20"}
-                    breakLabel="..."
-                    nextLabel="next >"
-                    onPageChange={handlePageClick}
-                    pageRangeDisplayed={5}
-                    pageCount={pageCount}
-                    previousLabel="< previous"
-                    renderOnZeroPageCount={null}
-                />
-            </nav>
+
+
         </div>
     );
 };
 
-export default BlogList;
+export default BlogListPaginated;

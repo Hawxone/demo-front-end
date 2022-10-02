@@ -15,8 +15,7 @@ const AddBlog = () => {
         title:"",
         subtitle:"",
         content:"",
-        image:undefined,
-        file:undefined,
+        imageUrl:"",
         tags:[],
         posted:""
     }
@@ -67,7 +66,7 @@ const AddBlog = () => {
         setBlogState({...blogState,tags:event})
     };
 
-    const addImageToPost = (e)=>{
+/*    const addImageToPost = (e)=>{
         const reader = new FileReader();
         if(e.target.files[0]) {
             reader.readAsDataURL(e.target.files[0]);
@@ -75,7 +74,7 @@ const AddBlog = () => {
                 setBlogState({...blogState,file: e.target.result});
             }
         }
-    }
+    }*/
 
 
 
@@ -96,13 +95,14 @@ const AddBlog = () => {
         formData.append("title",blogState.title)
         formData.append("subtitle",blogState.subtitle)
         formData.append("content",blogState.content)
-        formData.append("file",blogState.file)
+        formData.append("image",blogState.imageUrl)
         formData.append("tags",JSON.stringify(blogState.tags))
         formData.append("posted",blogState.posted)
 
         dispatch(saveBlog({formData, blogState}))
             .unwrap()
             .then(data=>{
+                console.log(data)
                 toggleCloseModal()
             }).catch(e=>{
                 console.log(e)
@@ -172,7 +172,7 @@ const AddBlog = () => {
                                             <div className="mb-6">
                                                 <label htmlFor="default-input"
                                                        className="block mb-2 text-sm font-medium text-gray-900">Header Image</label>
-                                                <input id="file" type={"file"} onChange={addImageToPost}
+                                                <input id="imageUrl" type={"text"} onChange={handleInputChange}
                                                           className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5" />
                                             </div>
                                             {blogState.file && (
