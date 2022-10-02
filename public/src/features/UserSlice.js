@@ -9,6 +9,7 @@ import userService from "../../../services/UserService";
 
 
 const accessToken = typeof window !== 'undefined' ? localStorage.getItem('accessToken') : null
+const roles = typeof window !== 'undefined' ? localStorage.getItem('roles') : null
 const initialState= {
     loading:false,
     userInfo:null,
@@ -59,7 +60,7 @@ export const userLogin = createAsyncThunk(
         try{
             const {data} = await  userService.login({username,password})
             localStorage.setItem('accessToken',data.accessToken)
-
+            console.log(data)
             return data
 
         }catch (error){

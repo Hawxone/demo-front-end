@@ -34,7 +34,7 @@ const LoginComponent = () => {
     }
 
     useEffect(() => {
-        if(userInfo) router.push("/")
+        if(userInfo) router.push("/").then(()=>window.location.reload())
     }, [router, userInfo]);
 
 
