@@ -32,6 +32,10 @@ const Header = () => {
             href:"/blog/server-paginated/1"
         },
         {
+            name:"AWS S3 Upload",
+            href:"/awsupload"
+        },
+        {
             name:"About",
             href:"/about"
         },

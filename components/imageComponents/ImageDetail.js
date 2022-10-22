@@ -1,5 +1,4 @@
 import React from 'react';
-import Image from "next/image";
 import {console} from "next/dist/compiled/@edge-runtime/primitives/console";
 
 
@@ -16,7 +15,7 @@ const ImageDetail = ({props,imageId}) => {
                         imageId == prop.imageOrder && (
 
                             <div key={prop.id}>
-                                <img loading={"lazy"} src={prop.imageUrl} width={856} height={1200} alt={prop.imageOrder} />
+                                <img loading={"lazy"} src={`https://cdn.dimasblog.my.id/galleries/${prop.title}`} width={856} height={1200} alt={prop.imageOrder} />
                             </div>
 
                         )
@@ -27,7 +26,7 @@ const ImageDetail = ({props,imageId}) => {
             {
                 props.map((prop)=>(
                     <div className={"hidden"} key={prop.id}>
-                        <img src={prop.imageUrl} width={856} height={1200} alt={prop.imageOrder} quality={30} priority={true}/>
+                        <img src={`https://cdn.dimasblog.my.id/galleries/${prop.title}`} width={856} height={1200} alt={prop.imageOrder} />
                     </div>
 
                 ))

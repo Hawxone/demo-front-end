@@ -1,10 +1,9 @@
 import React from 'react';
 import Head from "next/head";
 import Header from "../../components/Header";
-import LoginComponent from "../../components/authComponents/Login";
+import AwsUploadComponent from "../../components/awsUploadComponents/AwsUpload";
 
-
-const Login = () => {
+const AwsUpload = () => {
     return (
         <div>
             <Head>
@@ -14,7 +13,7 @@ const Login = () => {
             </Head>
             <Header />
             <main className={"flex bg-gray-200"}>
-                <LoginComponent />
+                <AwsUploadComponent />
             </main>
 
             <footer >
@@ -23,4 +22,4 @@ const Login = () => {
     );
 };
 
-export default Login;
+export default AwsUpload;

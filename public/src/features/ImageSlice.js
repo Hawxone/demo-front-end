@@ -3,12 +3,22 @@ import ImageService from "../../../services/ImageService";
 
 
 
+
 const initialState = [];
 
 export const getImages = createAsyncThunk(
     "image/get",
     async ()=>{
         const res = await ImageService.getAll();
+        return res.data;
+    }
+)
+
+export const saveImage = createAsyncThunk(
+    "product/post",
+    async (title)=>{
+        console.log(title)
+        const res = await ImageService.saveImage({title});
         return res.data;
     }
 )
